@@ -92,6 +92,8 @@ export function sendingEmalVerification(data: any) {
     return sentToQueue(emailVerification, data)
 }
 
+
+
 function generateVerifyEmail(data: any) {
     return `
     Hello ${data.username}

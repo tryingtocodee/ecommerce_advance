@@ -31,8 +31,11 @@ const userSchema = new mongoose.Schema({
     emailToken : {
         type : String,
         unique : true,
-        expires : 3600,
         default : ""
+    },
+    emailTokenExpires : {
+        type : Date ,
+        expires : 3600
     }
 }, {timestamps : true})
 

@@ -6,6 +6,6 @@ const router = express.Router()
 
 router.post("/request-email", protectedRoutes , requestEmail)
 router.post("/verify-email/:token" , protectedRoutes , verifyEmail)
-router.post("/forgotpassword" , protectedRoutes , forgotPassword)
+
 
 export default router

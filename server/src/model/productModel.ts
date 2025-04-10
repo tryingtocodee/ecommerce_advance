@@ -10,7 +10,8 @@ const productSchema = new mongoose.Schema({
         type : String,
         required : true,
         minlength : [5 , "minimum 5 charactre required"] ,
-        maxlength : [40 , "max 40 charactre required"]
+        maxlength : [40 , "max 40 charactre required"],
+        unique : true
     },
     description : {
         type : String,
@@ -19,7 +20,11 @@ const productSchema = new mongoose.Schema({
         maxlength : [40 , "max 40 charactre required"]
     },
     images : [{
-        image : {
+        imageUrl : {
+            type : String,
+            required : true
+        },
+        imageId : {
             type : String,
             required : true
         }
@@ -33,7 +38,11 @@ const productSchema = new mongoose.Schema({
         default : 0 ,
         requried : true
     },
-
+    category : {
+        type : String,
+        required : true ,
+        enum : ["shirt" , "t-shirt" , "jeans" , "jacket"]
+    }
 },{timestamps : true})
 
 export const Product = mongoose.model("Product" , productSchema)

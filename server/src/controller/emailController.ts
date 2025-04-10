@@ -12,10 +12,18 @@ export const requestEmail = async(req :Request , res :Response , next : NextFunc
         if(!user){
             return res.json("no user found ")
         }
+        
+        const now = new Date()
+
+        if(user.emailTokenExpires && user.emailTokenExpires > now){
+            return res.json("email already send . check your email ")
+        }
 
         const emailToken : string = uuidv4();
 
+
        user.emailToken = emailToken
+       user.emailTokenExpires = new Date(Date.now() + 3600 * 1000)
 
        await user.save()
     
@@ -55,7 +63,16 @@ export const verifyEmail = async(req :Request , res :Response , next : NextFunct
         return res.json("icorrect email verify token plz login again and request new verify email ")
        }
 
-       await User.findByIdAndUpdate(userId._id , {isVerified : true})
+       if(user.emailTokenExpires  && user.emailTokenExpires < new Date() ){
+        return res.json("token expired request new email ")
+       }
+
+       user.isVerified = true
+       user.emailToken = ""
+       user.emailTokenExpires = undefined
+
+       return res.json("user verified ")
+
     } catch (e : any) {
         console.log("error in requestEmail" , e.message)
         return res.json("Internal server error")
