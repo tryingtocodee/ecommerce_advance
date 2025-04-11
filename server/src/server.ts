@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser"
 import emailRoutes from "./routes/v1/emailVerify"
 import { recieveQueue } from "./notification_system"
 import productRoutes from "./routes/v1/productRoutes"
+import cartRoutes from "./routes/v1/cartRoutes"
 
 
 dotenv.config()
@@ -20,6 +21,7 @@ const port = process.env.PORT
 app.use("/api/v1/auth" , authRoutes)
 app.use("/api/v1/email" , emailRoutes)
 app.use("/api/v1/products" , productRoutes)
+app.use("/api/v1/cart" , cartRoutes) 
 
 app.get("/" , (req , res ) : any=>{
     return res.send("hello")

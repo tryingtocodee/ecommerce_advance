@@ -160,7 +160,7 @@ export const updateProduct = async(req : Request , res : Response ) : Promise<an
            
 
             for(const img of images){
-                const uploadNewImage = await cloudinary.uploader.upload(img , {folder : "products"})
+                const uploadNewImage = await cloudinary.uploader.upload(req.file?.path || "")
 
                 product.images.push({
                     imageUrl: uploadNewImage.secure_url ,
