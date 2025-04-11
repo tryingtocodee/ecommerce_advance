@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import { Order } from "../model/orderModel"
 import { Cart } from "../model/cartModel"
+import { sendOrder } from "../notification_system"
 
 
 export const getAllOrders = async (req: Request, res: Response): Promise<any> => {
@@ -32,7 +33,7 @@ export const addOrder = async (req: Request, res: Response): Promise<any> => {
     try {
         const userId = req.user?._id
 
-        const cart = await Cart.findById(userId).populate("items.productId")
+        const cart = await Cart.findById({userId}).populate("items.productId")
 
         if (!cart) {
             return res.json(" no cart found . add products to cart first")
@@ -56,7 +57,7 @@ export const addOrder = async (req: Request, res: Response): Promise<any> => {
             const order = new Order({
                 userId,
                 productId: product._id,
-                price: product.price * item.quantity,
+                totalOrderValue: product.price * item.quantity,
                 orderStatus: "recieved"
             })
             await order.save()
@@ -64,6 +65,11 @@ export const addOrder = async (req: Request, res: Response): Promise<any> => {
 
         }
 
+        await sendOrder({
+            email : req.user?.email,
+            username : req.user?.username,
+            orders
+        })
         return res.json({
             message: "order recieved",
             orders

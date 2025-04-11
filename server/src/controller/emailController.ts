@@ -81,11 +81,3 @@ export const verifyEmail = async(req :Request , res :Response , next : NextFunct
 
 
 
-export const forgotPassword = async(req :Request , res :Response , next : NextFunction ) :Promise<any> => {
-    try {
-        
-    } catch (e : any) {
-        console.log("error in requestEmail" , e.message)
-        return res.json("Internal server error")
-    }
-}

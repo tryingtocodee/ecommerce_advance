@@ -2,6 +2,7 @@ import ampqlib from "amqplib/callback_api"
 import { emailService } from "../config/nodemailer";
 
 const emailVerification = 'verify-email'
+const sendOrderToUser = 'order-confirm'
 
 async function sentToQueue(queueName: string, data: any) {
     try {
@@ -84,6 +85,13 @@ async function processQueue(queueName: string, data: any) {
                 'Verify email',
                 generateVerifyEmail(data)
             )
+            break;
+        case 'order-confirm' : 
+            await emailService(
+                data.email,
+                'Order-confirmation' ,
+                generateOrderConfirmed(data)
+            )
     }
 }
 
@@ -92,7 +100,9 @@ export function sendingEmalVerification(data: any) {
     return sentToQueue(emailVerification, data)
 }
 
-
+export function sendOrder(data : any){
+    return sentToQueue(sendOrderToUser , data)
+}
 
 function generateVerifyEmail(data: any) {
     return `
@@ -100,5 +110,20 @@ function generateVerifyEmail(data: any) {
 
     Please verify the email by clicking on the link 
     Link : http://localhost:4000/verify-email/${data.emailToken}
+    `
+}
+
+function generateOrderConfirmed (data : any){
+   let orderSummary = data.orders.map((order : any, i : number) => {
+    `productId ${order.productId} : orderValue : ${order.totalOrderValue}`
+   }).join('\n')
+
+    return `
+        hello ${data.username}
+
+        ${orderSummary}
+
+        Thank you for shopping with us 
+
     `
 }
